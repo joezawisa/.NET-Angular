@@ -2,7 +2,7 @@ FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build-env
 WORKDIR /App
 
 # Copy everything
-COPY . ./
+COPY backend .
 # Restore as distinct layers
 RUN dotnet restore
 # Build and publish a release
@@ -13,3 +13,5 @@ FROM mcr.microsoft.com/dotnet/aspnet:6.0
 WORKDIR /App
 COPY --from=build-env /App/out .
 ENTRYPOINT ["dotnet", "Photos.dll"]
+# Make the web server accessible
+EXPOSE 5000
