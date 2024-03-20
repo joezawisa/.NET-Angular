@@ -1,0 +1,6 @@
+# Git
+.gitignore
+
+# C-Sharp
+bin/
+obj/

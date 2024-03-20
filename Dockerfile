@@ -1,17 +1,27 @@
-FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build-env
+# Build front end
+FROM node:latest AS frontend
 WORKDIR /App
+COPY frontend .
+# Install npm project dependencies
+RUN npm install
+# Compile
+RUN npm run build
 
-# Copy everything
+# Build back end
+FROM mcr.microsoft.com/dotnet/sdk:6.0 AS backend
+WORKDIR /App
 COPY backend .
 # Restore as distinct layers
 RUN dotnet restore
+# Integrate front end
+COPY --from=frontend /App/dist ./wwwroot
 # Build and publish a release
 RUN dotnet publish -c Release -o out
 
 # Build runtime image
 FROM mcr.microsoft.com/dotnet/aspnet:6.0
 WORKDIR /App
-COPY --from=build-env /App/out .
+COPY --from=backend /App/out .
 ENTRYPOINT ["dotnet", "Photos.dll"]
 # Make the web server accessible
 ENV ASPNETCORE_URLS=http://+:5000
