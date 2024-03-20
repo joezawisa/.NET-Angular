@@ -1,10 +1,11 @@
 # Build front end
-FROM node:latest AS frontend
+FROM node:20 AS frontend
 WORKDIR /App
-COPY frontend .
 # Install npm project dependencies
+COPY frontend/package*.json .
 RUN npm install
 # Compile
+COPY frontend .
 RUN npm run build
 
 # Build back end
@@ -14,7 +15,7 @@ COPY backend .
 # Restore as distinct layers
 RUN dotnet restore
 # Integrate front end
-COPY --from=frontend /App/dist ./wwwroot
+COPY --from=frontend /App/dist/photos/browser ./wwwroot
 # Build and publish a release
 RUN dotnet publish -c Release -o out
 
