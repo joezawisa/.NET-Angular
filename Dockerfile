@@ -14,4 +14,5 @@ WORKDIR /App
 COPY --from=build-env /App/out .
 ENTRYPOINT ["dotnet", "Photos.dll"]
 # Make the web server accessible
+ENV ASPNETCORE_URLS=http://+:5000
 EXPOSE 5000
