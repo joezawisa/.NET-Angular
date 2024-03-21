@@ -10,6 +10,6 @@ var app = builder.Build();
 app.MapControllers();
 
 // Use static files for front end
-app.UseStaticFiles();
+app.UseFileServer();
 
 app.Run();
